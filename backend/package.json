@@ -21,7 +21,9 @@
   "homepage": "https://github.com/dev17sh/web-sparkle-weaver/tree/test-branch#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "stripe": "^20.0.0"
   }
 }
