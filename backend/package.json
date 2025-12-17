@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "test_synopsis",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev17sh/web-sparkle-weaver.git#test-branch"
+  },
+  "keywords": [
+    "dev17sh"
+  ],
+  "author": "dev27sh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dev17sh/web-sparkle-weaver/issues"
+  },
+  "homepage": "https://github.com/dev17sh/web-sparkle-weaver/tree/test-branch#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7",
+    "stripe": "^20.0.0"
+  }
+  
+}
