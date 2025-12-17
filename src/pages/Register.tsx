@@ -28,7 +28,7 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Passwords don't match",
@@ -39,15 +39,54 @@ const Register = () => {
     }
 
     setIsLoading(true);
-    
-    // Simulate registration
-    setTimeout(() => {
-      toast({
-        title: "Registration Successful!",
-        description: `Welcome to EduNabha! You can now login.`,
+
+    try {
+      const response = await fetch('http://localhost:3000/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: role,
+          location: formData.location
+        })
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Registration Successful!",
+          description: `Welcome to EduNabha! You can now login.`,
+        });
+        // Reset form or redirect
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          location: "",
+        });
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: data.message || "Something went wrong",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to connect to the server",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -88,11 +127,10 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setRole("student")}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                role === "student"
+              className={`p-4 rounded-xl border-2 transition-all ${role === "student"
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"
-              }`}
+                }`}
             >
               <GraduationCap className={`h-6 w-6 mx-auto mb-2 ${role === "student" ? "text-primary" : "text-muted-foreground"}`} />
               <div className={`font-semibold ${role === "student" ? "text-primary" : "text-foreground"}`}>Student</div>
@@ -100,11 +138,10 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setRole("teacher")}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                role === "teacher"
+              className={`p-4 rounded-xl border-2 transition-all ${role === "teacher"
                   ? "border-secondary bg-secondary/5"
                   : "border-border hover:border-secondary/50"
-              }`}
+                }`}
             >
               <UserCog className={`h-6 w-6 mx-auto mb-2 ${role === "teacher" ? "text-secondary" : "text-muted-foreground"}`} />
               <div className={`font-semibold ${role === "teacher" ? "text-secondary" : "text-foreground"}`}>Teacher</div>

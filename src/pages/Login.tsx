@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import logoIcon from "@/assets/logo-icon.png";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const role = searchParams.get("role") || "student";
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -19,15 +20,50 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate login
-    setTimeout(() => {
-      toast({
-        title: "Login Successful!",
-        description: `Welcome back to EduNabha.`,
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Login Successful!",
+          description: `Welcome back, ${data.user.name}!`,
+        });
+
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('isLoggedIn', 'true');
+
+        // Redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        toast({
+          title: "Login Failed",
+          description: data.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to connect to the server",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const getRoleTitle = () => {
